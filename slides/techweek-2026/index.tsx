@@ -17,6 +17,16 @@ import mostiImg from './assets/mosti.jpg';
 import qrChannelImg from './assets/qr-techlead-stream.png';
 import meatProxyImg from './assets/meat-proxy.png';
 import meatProxyVideo from './assets/meat-proxy-reaction.mp4';
+import talentmindLogo from './assets/products/talentmind.svg';
+import qrSddTalk from './assets/qr-sdd-talk.svg';
+import qrAutonomyTalk from './assets/qr-autonomy-talk.svg';
+import coverSddTalk from './assets/cover-sdd-talk.jpg';
+import coverAutonomyTalk from './assets/cover-autonomy-talk.jpg';
+import tlLogo from './assets/tlconf/tl-logo.svg';
+import chistyakovImg from './assets/tlconf/chistyakov.jpg';
+import usenkoImg from './assets/tlconf/usenko.jpg';
+import kordonMark from './assets/products/kordon-mark.svg';
+import artelMark from './assets/products/artel-mark.svg';
 
 // ─── Дизайн-токены (правятся из панели Design) ───────────────────────────────
 export const design: DesignSystem = {
@@ -104,15 +114,6 @@ const breath: SlideTransition = {
   },
 };
 
-// MORPH — схемы ролей: рамки переезжают, остальное только проявляется.
-const MORPH_MS = 760;
-const morphT: SlideTransition = {
-  duration: 280,
-  exit: { duration: 220, easing: EASE_IN, keyframes: [{ opacity: 1 }, { opacity: 0 }] },
-  enter: { duration: 300, delay: 110, easing: EASE_OUT, keyframes: [{ opacity: 0 }, { opacity: 1 }] },
-  morph: { duration: MORPH_MS, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-};
-
 // ─── Внутристраничное движение ───────────────────────────────────────────────
 // Подъём на 12px + проявление. Работает только на «живой» странице (data-live="1")
 // и не трогает ещё не раскрытые шаги, поэтому превью и снимки всегда финальные.
@@ -131,7 +132,6 @@ const MOTION_CSS = `
 ${nth}
 .rs-d1 { --rs-d: 120ms; } .rs-d2 { --rs-d: 240ms; } .rs-d3 { --rs-d: 360ms; } .rs-d4 { --rs-d: 480ms; }
 .rs-d5 { --rs-d: 600ms; } .rs-d6 { --rs-d: 720ms; }
-.rs-morph-late { --rs-t0: ${MORPH_MS}ms; }
 .rs-fade { --rs-anim: rs-fade; } .rs-pop { --rs-anim: rs-pop; }
 .rs-lay { --rs-anim: rs-lay; }
 .rs-fast { --rs-gap: 45ms; } .rs-slow { --rs-gap: 110ms; }
@@ -210,7 +210,7 @@ const Footer = () => {
 
 const Eyebrow = ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
   <div
-    style={{ fontSize: '66px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--osd-accent)', ...style }}
+    style={{ fontSize: '66px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--osd-accent)', ...style, translate: '0px -12.73px' }}
   >
     {children}
   </div>
@@ -1177,6 +1177,336 @@ const Clients: Page = () => (
 
 
 
+// 04 — Наши продукты
+const MarkLogo = ({ src, name, ai, ink, gold }: { src: string; name: string; ai: string; ink: string; gold: string }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
+    <img src={src} alt="" style={{ width: 88, height: 88 }} />
+    <span style={{ fontFamily: 'var(--osd-font-display)', fontSize: 56, fontWeight: 700, letterSpacing: '-0.02em', color: ink, whiteSpace: 'nowrap' }}>
+      {name} <span style={{ color: gold }}>{ai}</span>
+    </span>
+  </div>
+);
+
+const ProductCard = ({ logo, text, cls }: { logo: ReactNode; text: ReactNode; cls: string }) => (
+  <div
+    className={`rs-in ${cls}`}
+    style={{
+      flex: 1,
+      minWidth: 0,
+      background: surface,
+      border: `1px solid ${line}`,
+      borderRadius: 'var(--osd-radius)',
+      padding: '56px 48px 64px',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+  >
+    <div style={{ flex: 'none', height: 140, display: 'flex', alignItems: 'center' }}>{logo}</div>
+    <div style={{ fontSize: 34, lineHeight: 1.45, marginTop: 40 }}>{text}</div>
+  </div>
+);
+
+const Products: Page = () => (
+  <Frame title="Продуктовое направление" gap={64}>
+    <div style={{ display: 'flex', gap: 40, alignItems: 'stretch' }}>
+      <ProductCard
+        cls="rs-d1"
+        logo={<MarkLogo src={kordonMark} name="Кордон" ai="AI" ink="#0b1324" gold="#e0b04a" />}
+        text="ИИ-шлюз в контуре компании: защита персданных и контроль расходов на модели"
+      />
+      <ProductCard
+        cls="rs-d2"
+        logo={<MarkLogo src={artelMark} name="Артель" ai="AI" ink="#13221D" gold="#E3B24A" />}
+        text="Сотрудники и ИИ-агенты ведут процессы компании на одной доске"
+      />
+      <ProductCard
+        cls="rs-d3"
+        logo={<img src={talentmindLogo} alt="TalentMind" style={{ height: 96 }} />}
+        text="ИИ-оценка soft skills и совместимости кандидатов по записям интервью"
+      />
+    </div>
+  </Frame>
+);
+
+// 05 — О чём поговорим
+const AgendaRow = ({ n, title, text, cls }: { n: string; title: string; text: string; cls: string }) => (
+  <div
+    className={`rs-in ${cls}`}
+    style={{ display: 'flex', alignItems: 'center', gap: 48, padding: '30px 0', borderTop: `2px solid ${line}` }}
+  >
+    <div
+      style={{
+        flex: 'none',
+        width: 120,
+        fontFamily: 'var(--osd-font-display)',
+        fontSize: 72,
+        fontWeight: 800,
+        letterSpacing: '-0.04em',
+        lineHeight: 1,
+        background: 'linear-gradient(135deg, #6f00ff, #b285e0)',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent',
+      }}
+    >
+      {n}
+    </div>
+    <div
+      style={{
+        flex: 'none',
+        width: 560,
+        fontFamily: 'var(--osd-font-display)',
+        fontSize: 44,
+        fontWeight: 700,
+        letterSpacing: '-0.02em',
+        lineHeight: 1.2,
+      }}
+    >
+      {title}
+    </div>
+    <div style={{ flex: 1, minWidth: 0, fontSize: 32, lineHeight: 1.4, color: muted }}>{text}</div>
+  </div>
+);
+
+const Agenda: Page = () => (
+  <Frame
+    title="О чём поговорим"
+    lead={<>Ретроспектива <A>1,5 лет</A> AI SDLC в Вебпрактике</>}
+    gap={56}
+  >
+    <AgendaRow n="01" title="Откуда стартовали" text="Путь к 100% adoption среди разработчиков" cls="rs-d1" />
+    <AgendaRow n="02" title="Три вектора развития" text="Что сработало и где ошиблись" cls="rs-d2" />
+    <div style={{ borderBottom: `2px solid ${line}` }}>
+      <AgendaRow n="03" title="Куда идём дальше" text="Планы и выводы для вас" cls="rs-d3" />
+    </div>
+  </Frame>
+);
+
+// ─── Отсылки на мои доклады (QR → YouTube) ───────────────────────────────────
+const YoutubeIcon = ({ width = 120 }: { width?: number }) => (
+  <svg width={width} height={(width * 20) / 28} viewBox="0 0 28 20" aria-hidden="true">
+    <path
+      d="M27.4 3.1A3.5 3.5 0 0 0 24.9.6C22.7 0 14 0 14 0S5.3 0 3.1.6A3.5 3.5 0 0 0 .6 3.1C0 5.3 0 10 0 10s0 4.7.6 6.9a3.5 3.5 0 0 0 2.5 2.5C5.3 20 14 20 14 20s8.7 0 10.9-.6a3.5 3.5 0 0 0 2.5-2.5c.6-2.2.6-6.9.6-6.9s0-4.7-.6-6.9Z"
+      fill="#FF0000"
+    />
+    <path d="M11.2 14.3 18.5 10l-7.3-4.3v8.6Z" fill="#fff" />
+  </svg>
+);
+
+const TalkQr = ({ src, alt }: { src: string; alt: string }) => (
+  <div
+    style={{
+      position: 'relative',
+      flex: 'none',
+      background: surface,
+      border: `1px solid ${line}`,
+      borderRadius: 'var(--osd-radius)',
+      padding: 44,
+      boxShadow: '0 32px 64px -32px rgba(111,0,255,0.35)',
+    }}
+  >
+    <img src={src} alt={alt} style={{ display: 'block', width: 470, height: 470, imageRendering: 'pixelated' }} />
+    <div
+      style={{
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 132,
+        height: 104,
+        background: surface,
+        borderRadius: 20,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <YoutubeIcon width={104} />
+    </div>
+  </div>
+);
+
+const TalkRef = ({ cover, alt, qr }: { cover: string; alt: string; qr: ReactNode }) => (
+  <Live style={{ padding: `0 ${PAD}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <div
+      className="rs-in"
+      style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 28, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--osd-accent)' }}
+    >
+      <YoutubeIcon width={44} />
+      Подробнее — в моём докладе
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 44 }}>
+      <img
+        className="rs-in rs-d1"
+        src={cover}
+        alt={alt}
+        style={{
+          width: 992,
+          height: 558,
+          objectFit: 'cover',
+          borderRadius: 'var(--osd-radius)',
+          boxShadow: '0 32px 64px -32px rgba(21,17,31,0.45)',
+          display: 'block',
+        }}
+      />
+      <div className="rs-in rs-d2 rs-pop">{qr}</div>
+    </div>
+    <Footer />
+  </Live>
+);
+
+const SddTalk: Page = () => (
+  <TalkRef
+    cover={coverSddTalk}
+    alt="Обложка доклада «Spec-Driven Development через все роли команды»"
+    qr={<TalkQr src={qrSddTalk} alt="QR: доклад про SDD на YouTube" />}
+  />
+);
+
+const AutonomyTalk: Page = () => (
+  <TalkRef
+    cover={coverAutonomyTalk}
+    alt="Обложка доклада «Уровни зрелости внедрения AI в процессы разработки»"
+    qr={<TalkQr src={qrAutonomyTalk} alt="QR: доклад про уровни зрелости AI на YouTube" />}
+  />
+);
+
+// ─── Рекомендации: TeamLead Conf 2026 (в стиле конференции) ──────────────────
+const TLC = {
+  bg: '#05051c',
+  cyan: '#00b0ff',
+  blue: '#4561e2',
+  text: '#ffffff',
+  muted: 'rgba(255,255,255,0.62)',
+  border: 'rgba(0,176,255,0.32)',
+};
+
+const TlcTalk = ({
+  tag,
+  title,
+  photo,
+  speaker,
+  company,
+  when,
+  cls,
+}: {
+  tag: string;
+  title: string;
+  photo: string;
+  speaker: string;
+  company: string;
+  when: ReactNode;
+  cls: string;
+}) => (
+  <div
+    className={`rs-in ${cls}`}
+    style={{
+      flex: 1,
+      minWidth: 0,
+      background: 'rgba(255,255,255,0.03)',
+      border: `1px solid ${TLC.border}`,
+      borderRadius: 24,
+      padding: '44px 48px',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+  >
+    <div style={{ alignSelf: 'flex-start', background: TLC.cyan, color: '#fff', fontSize: 24, fontWeight: 600, padding: '8px 22px', borderRadius: 999 }}>
+      {tag}
+    </div>
+    <div
+      style={{
+        fontFamily: 'var(--osd-font-display)',
+        fontSize: 42,
+        fontWeight: 700,
+        lineHeight: 1.22,
+        letterSpacing: '-0.02em',
+        color: TLC.text,
+        marginTop: 28,
+        flex: 1,
+      }}
+    >
+      {title}
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 36, paddingTop: 32, borderTop: `1px solid ${TLC.border}` }}>
+      <img src={photo} alt={speaker} style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover', flex: 'none' }} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 30, fontWeight: 600, color: TLC.text }}>{speaker}</div>
+        <div style={{ fontSize: 24, color: TLC.muted, marginTop: 4 }}>{company}</div>
+      </div>
+      <div style={{ fontSize: 26, fontWeight: 600, color: TLC.cyan, textAlign: 'right', lineHeight: 1.35 }}>{when}</div>
+    </div>
+  </div>
+);
+
+const TlcRecommend: Page = () => (
+  <Live
+    style={{
+      background: TLC.bg,
+      backgroundImage:
+        'radial-gradient(1100px 700px at 18% 22%, rgba(40,70,220,0.42) 0%, rgba(40,70,220,0) 65%), radial-gradient(900px 600px at 95% 100%, rgba(0,176,255,0.16) 0%, rgba(0,176,255,0) 60%)',
+      color: TLC.text,
+      padding: `92px ${PAD}px 0`,
+    }}
+  >
+    <div className="rs-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
+        <img src={tlLogo} alt="" style={{ width: 76, height: 76 }} />
+        <div style={{ fontFamily: 'var(--osd-font-display)', fontSize: 30, fontWeight: 800, lineHeight: 1.05 }}>
+          TeamLead
+          <br />
+          Conf <span style={{ color: TLC.cyan }}>2026</span>
+        </div>
+      </div>
+      <div
+        style={{
+          border: `1px solid ${TLC.border}`,
+          borderRadius: 16,
+          padding: '16px 28px',
+          fontSize: 26,
+          display: 'flex',
+          gap: 18,
+        }}
+      >
+        <span>3–4 декабря</span>
+        <span style={{ color: TLC.muted }}>·</span>
+        <span>Кампус Сколково</span>
+      </div>
+    </div>
+
+    <div className="rs-in rs-d1" style={{ display: 'flex', alignItems: 'center', gap: 20, marginTop: 72 }}>
+      <span style={{ fontSize: 26, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: TLC.cyan }}>
+        Рекомендую послушать
+      </span>
+      <span style={{ width: 64, height: 2, background: TLC.cyan, opacity: 0.6 }} />
+    </div>
+    <div className="rs-in rs-d1" style={{ marginTop: 20 }}>
+      <Heading size={68}>Продолжение темы на TeamLead Conf</Heading>
+    </div>
+
+    <div style={{ display: 'flex', gap: 40, marginTop: 56, alignItems: 'stretch' }}>
+      <TlcTalk
+        cls="rs-d2"
+        tag="Автономность"
+        title="Путь к построению автономной разработки без участия человека"
+        photo={chistyakovImg}
+        speaker="Сергей Чистяков"
+        company="Райффайзен Банк"
+        when={<>3 декабря<br />12:50</>}
+      />
+      <TlcTalk
+        cls="rs-d3"
+        tag="Продакт-инженеры"
+        title="Сначала люди, потом агенты: как мы сделали разработку AI‑native и при чём тут продакт‑инженеры"
+        photo={usenkoImg}
+        speaker="Андрей Усенко"
+        company="Райффайзен Банк"
+        when={<>3 декабря<br />10:30</>}
+      />
+    </div>
+  </Live>
+);
+
 // ─── Глава 01: путь к 100% adoption ──────────────────────────────────────────
 
 
@@ -1298,7 +1628,7 @@ const Bridge: Page = () => (
     <div style={{ display: 'flex', gap: 80, alignItems: 'flex-start' }}>
       <div className="rs-in" style={{ flex: 1, minWidth: 0 }}>
         <Heading>Кейс стратегической сессии</Heading>
-        <Lead>Попросили руководителей цехов нарисовать, как они видят выход на L3.</Lead>
+        <Lead>{'\n'}</Lead>
         <Steps>
           <Step>
             <div style={{ marginTop: 56, fontSize: 36, lineHeight: 1.4, fontWeight: 600 }}>
@@ -1466,7 +1796,7 @@ const Gate = ({ id, x, y, h = 170 }: { id: string; x: number; y: number; h?: num
 );
 const HArrow = ({ x, y, w = 60 }: { x: number; y: number; w?: number }) => (
   <svg
-    className="rs-in rs-fade rs-morph-late"
+    className="rs-in rs-fade"
     style={{ position: 'absolute', left: x, top: y - 14 }}
     width={w}
     height="28"
@@ -1478,7 +1808,7 @@ const HArrow = ({ x, y, w = 60 }: { x: number; y: number; w?: number }) => (
   </svg>
 );
 const DiagramCaption = ({ y, children }: { y: number; children: ReactNode }) => (
-  <div className="rs-in rs-fade rs-morph-late" style={{ position: 'absolute', left: PAD, right: PAD, top: y, fontSize: 30, lineHeight: 1.4, color: muted }}>
+  <div className="rs-in rs-fade" style={{ position: 'absolute', left: PAD, right: PAD, top: y, fontSize: 30, lineHeight: 1.4, color: muted }}>
     {children}
   </div>
 );
@@ -1501,7 +1831,7 @@ const DiagramPage = ({ title, eyebrow, children }: { title: ReactNode; eyebrow?:
 const FlowAnti: Page = () => (
   <DiagramPage title="Антипаттерн: SDD только в разработке">
     <Box id="src" x={460} y={290} w={1000} h={130} tone="ghost" title="Jira / Confluence" sub="спецификация во внешней системе: источник требований" />
-    <div className="rs-in rs-fade rs-morph-late" style={{ position: 'absolute', left: 0, right: 0, top: 448, textAlign: 'center', fontSize: 26, color: muted }}>
+    <div className="rs-in rs-fade" style={{ position: 'absolute', left: 0, right: 0, top: 448, textAlign: 'center', fontSize: 26, color: muted }}>
       ↓ требования падают тикетами и текстом ↓
     </div>
     <Box id="an" x={140} y={530} w={480} h={210} title="Аналитик" sub="пишет требования в Jira / Confluence" />
@@ -1512,7 +1842,6 @@ const FlowAnti: Page = () => (
     <DiagramCaption y={820}>SDD живёт островом у разработчика · требования дублируются · трассировка рвётся</DiagramCaption>
   </DiagramPage>
 );
-FlowAnti.transition = morphT;
 
 // Схема 2: сквозной SDD
 // Подложка без морфа: иначе её проявляющаяся копия ложится поверх летящих карточек.
@@ -1552,7 +1881,6 @@ const FlowE2E: Page = () => (
     <DiagramCaption y={910}>Одни спеки, один язык, сквозная трассировка: основной профит именно здесь</DiagramCaption>
   </DiagramPage>
 );
-FlowE2E.transition = morphT;
 
 // Схема 3: ошибка с e2e (v1)
 const FlowV1: Page = () => (
@@ -1567,7 +1895,6 @@ const FlowV1: Page = () => (
     <DiagramCaption y={760}>Думали, что e2e напишут тестировщики отдельным шагом. Но это разрывает цикл «код ↔ тесты».</DiagramCaption>
   </DiagramPage>
 );
-FlowV1.transition = morphT;
 
 // Схема 4: e2e в одном цикле (v2)
 const FlowV2: Page = () => (
@@ -1582,7 +1909,6 @@ const FlowV2: Page = () => (
     <DiagramCaption y={860}>Агент пишет тесты и гоняет их с правками кода в одном цикле. Разрыв этого цикла и есть пережиток.</DiagramCaption>
   </DiagramPage>
 );
-FlowV2.transition = morphT;
 
 
 
@@ -1712,7 +2038,15 @@ const Skills: Page = () => (
 
 // AI-шлюз: что закрывает своё решение
 const GatewayOwn: Page = () => (
-  <Frame title="Свой шлюз: что он нам закрывает" lead="Полноценный корпоративный шлюз на open source компонентах." gap={48}>
+  <Frame
+    title={
+      <span style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
+        Свой шлюз
+        <MarkLogo src={kordonMark} name="Кордон" ai="AI" ink="#0b1324" gold="#e0b04a" />
+      </span>
+    }
+    gap={56}
+  >
     <div className="rs-steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
       <Steps>
         <Step>
@@ -1729,6 +2063,9 @@ const GatewayOwn: Page = () => (
         </Step>
         <Step>
           <Card label="экономия" title="Абьюз подписок 😉" text="Подписки Codex используем «по-чёрному»: роутим их через один шлюз улучшая утилизацию" />
+        </Step>
+        <Step>
+          <Card label="данные" title="Dreaming" text="По сессиям — аналитика успешности и автономности + данные для дообучения" />
         </Step>
       </Steps>
     </div>
@@ -3261,6 +3598,77 @@ const CentralLoop: Page = () => (
   </Frame>
 );
 
+// Что делаем по автономности сейчас
+const NowCard = ({ n, title, children, accent }: { n: string; title: ReactNode; children: ReactNode; accent?: boolean }) => (
+  <div
+    style={{
+      height: '100%',
+      boxSizing: 'border-box',
+      background: accent ? tint : surface,
+      border: accent ? '3px solid var(--osd-accent)' : `1px solid ${line}`,
+      borderRadius: 'var(--osd-radius)',
+      padding: '48px 52px',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+  >
+    <div
+      style={{
+        fontFamily: 'var(--osd-font-display)',
+        fontSize: 72,
+        fontWeight: 800,
+        lineHeight: 1,
+        letterSpacing: '-0.04em',
+        background: 'linear-gradient(135deg, #6f00ff, #b285e0)',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent',
+      }}
+    >
+      {n}
+    </div>
+    <div style={{ fontFamily: 'var(--osd-font-display)', fontSize: 44, fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', marginTop: 28 }}>
+      {title}
+    </div>
+    <div style={{ marginTop: 32, flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</div>
+  </div>
+);
+
+const MiniMark = ({ src, name }: { src: string; name: string }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: surface, border: `1px solid ${line}`, borderRadius: 999, padding: '10px 26px 10px 14px' }}>
+    <img src={src} alt="" style={{ width: 48, height: 48 }} />
+    <span style={{ fontFamily: 'var(--osd-font-display)', fontSize: 30, fontWeight: 700 }}>{name}</span>
+  </div>
+);
+
+const AutonomyNow: Page = () => (
+  <Frame title="Что делаем по автономности сейчас" gap={64}>
+    <div className="rs-steps-row" style={{ display: 'flex', gap: 40, alignItems: 'stretch' }}>
+      <Steps>
+        <Step>
+          <NowCard n="01" title={<>OpenSpec-пайплайн в <A>нашей платформе</A></>}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <MiniMark src={artelMark} name="Артель" />
+              <span style={{ fontSize: 36, color: accentSoft, fontWeight: 700 }}>+</span>
+              <MiniMark src={kordonMark} name="Кордон" />
+            </div>
+            <div style={{ fontSize: 32, lineHeight: 1.45, color: muted, marginTop: 40 }}>
+              Модель работы Артели взяли из open source <b style={{ color: 'var(--osd-text)' }}>Multica</b>
+            </div>
+          </NowCard>
+        </Step>
+        <Step>
+          <NowCard n="02" title={<>Замыкаем петлю <A>Dreaming</A></>} accent>
+            <div style={{ fontSize: 32, lineHeight: 1.45, color: muted, marginTop: 40 }}>
+              По данным сессий строим аналитику успешности, автономности и куски для дообучения
+            </div>
+          </NowCard>
+        </Step>
+      </Steps>
+    </div>
+  </Frame>
+);
+
 const MarketTitle: Page = () => <Shout size={128}>А что на рынке?</Shout>;
 
 const MarketNow: Page = () => (
@@ -3370,10 +3778,8 @@ export default [
   Cover,
   About,
   Clients,
-  PollChange,
-  NoSilverBullet,
-  ThreeVectors,
-  // Наша история
+  Products,
+  Agenda,
   Adoption100,
   PathTo100,
   Start2026,
@@ -3383,6 +3789,7 @@ export default [
   ContextVsImpl,
   Candidates,
   OpenSpecBase,
+  SddTalk,
   HarnessStack,
   MetaRepo,
   Skills,
@@ -3392,11 +3799,11 @@ export default [
   Div02,
   RolesH1,
   Bridge,
+  FlowAnti,
+  FlowE2E,
   ManagementMistake,
   LessonsOverview,
   Lesson1,
-  FlowAnti,
-  FlowE2E,
   FlowV1,
   FlowV2,
   Takeaway1,
@@ -3428,11 +3835,14 @@ export default [
   AutonomyPlatform,
   NoTurnkey,
   PracticesMatrix,
+  AutonomyTalk,
   CentralLoop,
+  AutonomyNow,
   // Финал
   ConclusionsTitle,
   LookBack,
   VectorTakeaways,
   PersonalStrategy,
+  TlcRecommend,
   Questions,
 ] satisfies Page[];
